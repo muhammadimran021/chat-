@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ChatApplication</string>
+    <string name="user_name">Enter The User Name</string>
+    <string name="user_email">Enter The Email</string>
+    <string name="user_password">Enter The Password</string>
+    <string name="button_signup">signup</string>
+    <string name="signup_text"> Not a user? Create a New Account</string>
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="gender_text">Gender</string>
+    <string name="button_login">Login</string>
+    <string name="textmessage">Enter the message</string>
+    <string name="buttonsend">Send</string>
+    <string name="title_activity_chat__main__view">Chat_Main_View</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">LogOut</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

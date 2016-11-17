@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "947313339540",
+    "firebase_url": "https://chatapplication-f99c2.firebaseio.com",
+    "project_id": "chatapplication-f99c2",
+    "storage_bucket": "chatapplication-f99c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947313339540:android:cf2c7ce404c66cf7",
+        "android_client_info": {
+          "package_name": "com.example.babarmustafa.chatapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947313339540-2vq44k124tqjramlm5plq85ia3ihg07o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX4luaX3LEseCwnzR90k3a-bFmH_4oOsY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
