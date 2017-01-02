@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:anroid="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/activity_conversation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.babarmustafa.chatapplication.Chat_Work.ConversationActivity">
+
+
 
     <android.support.v7.widget.Toolbar
 
@@ -22,30 +24,38 @@
         android:minHeight="@dimen/abc_action_bar_default_height_material">
 
         <ImageButton
+            android:id="@+id/throw_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/colorPrimary"
             android:src="@drawable/back"
-            android:id="@+id/throw_back"
 
             />
-        <com.mikhaellopez.circularimageview.CircularImageView
 
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/user_pic"
             android:layout_width="75dp"
             android:layout_height="60dp"
-            android:src="@drawable/ima"
-            android:id="@+id/user_pic" />
+            android:src="@drawable/ima" />
+
         <TextView
+            android:id="@+id/selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/selected"
+            android:hint="no name availabe"
             android:textColor="#FFFFFF"
             android:textSize="25dp"
-            android:textStyle="bold"
-            android:hint="no name availabe"/>
+            android:textStyle="bold" />
 
     </android.support.v7.widget.Toolbar>
-
+    <ImageButton
+        android:layout_gravity="center"
+        android:id="@+id/puller"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/drawer_upper" />
     <ListView
         android:id="@+id/messages_conversation"
         android:layout_width="match_parent"
@@ -89,13 +99,13 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:layout_height="wrap_content">
 
-            android:id="@+id/frame_layout">
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent">
 
 
         </FrameLayout>
