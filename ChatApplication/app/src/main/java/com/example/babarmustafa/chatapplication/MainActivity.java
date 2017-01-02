@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.babarmustafa.chatapplication.Chat_Work.Chat_Main_View;
+import com.example.babarmustafa.chatapplication.Chat_Work.ConversationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -104,5 +105,9 @@ else if (s_passs.getText().toString().length() == 0) {
                 startActivity(i);
             }
         });
+    }
+
+    public static interface AnimationForPullerBottomListener {
+//        ConversationActivity.AnimationForPullerBottomListener
     }
 }
