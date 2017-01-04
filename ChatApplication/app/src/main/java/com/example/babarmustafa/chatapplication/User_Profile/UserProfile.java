@@ -1,19 +1,17 @@
 package com.example.babarmustafa.chatapplication.User_Profile;
 
+import android.app.Activity;
 import android.graphics.Color;
-import android.net.Uri;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.babarmustafa.chatapplication.R;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-public class UserProfile extends AppCompatActivity {
+public class UserProfile extends Activity {
     TextView username;
     ImageView imageView;
     Toolbar toolbar;
@@ -23,9 +21,7 @@ public class UserProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        getSupportActionBar().hide();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().hide();getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
