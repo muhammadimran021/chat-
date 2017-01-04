@@ -1,28 +1,14 @@
 package com.example.babarmustafa.chatapplication.Chat_Work;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.example.babarmustafa.chatapplication.R;
 import com.example.babarmustafa.chatapplication.User;
@@ -75,12 +61,7 @@ public class ConversationActivity extends Activity {
     RightAdapter listadapter;
     private ArrayList<NotificationMessage> messages;
     private FirebaseUser user;
-    private ImageView pullerLayout;
-    public static View groupMemberFragment;
-    public static float groupMemberFragmentTop;
-    public static View upperView;
-    GestureDetector gestureDetector;
-    AnimationForPullerBottomListener animationForPullerBottomListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,15 +75,9 @@ public class ConversationActivity extends Activity {
         conversation = (ListView) findViewById(R.id.messages_conversation);
         for_user_image_on_toolbar = (CircularImageView) findViewById(R.id.user_pic);
         for_user_name_selected_for_chat = (TextView) findViewById(R.id.selected);
-        pullerLayout = (ImageButton) findViewById(R.id.puller);
-        gestureDetector = new GestureDetector(this, new MyGestureDetector());
-        pullerLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("AnimationExp", "in HomeFragment pullerLayout's onTouch()");
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+
+
+        //addGroupMembersFragment(R.id.member_fragment_container);
 
 
         database = FirebaseDatabase.getInstance().getReference();
@@ -260,86 +235,6 @@ public class ConversationActivity extends Activity {
         });
     }
 
-    private void addGroupMembersFragment(int member_fragment_container) {
-
-//        SecondFragment groupMembersFragment = new SecondFragment();
-//        animationForPullerBottomListener = groupMembersFragment;
-//
-//
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .add(member_fragment_container, groupMembersFragment)
-//                .addToBackStack(null)
-//                .commit();
-
-    }
-
-
-    public class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            Log.d("AnimationExp", "in HomeFragment onFling(), e1.getY(): " + e1.getY() + ", e2.getY(): " + e2.getY());
-
-            if (e1.getY() < e2.getY()) {
-
-                moveDown();
-            }
-            return true;
-        }
-    }
-
-    private void moveDown() {
-
-        if (groupMemberFragmentTop == 0)
-            groupMemberFragmentTop = -groupMemberFragment.getHeight();
-
-
-        ObjectAnimator animationForUpperView = ObjectAnimator.ofFloat(upperView, "y", -groupMemberFragmentTop);
-        animationForUpperView.setDuration(400);
-
-        ObjectAnimator slideDownAnimation = ObjectAnimator.ofFloat(groupMemberFragment, "y", groupMemberFragmentTop, 0);
-        slideDownAnimation.setDuration(400);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-
-        animatorSet.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-//                    Log.d("hardwarelayer", "in onAnimationStart isHardwareAccelerated: " + groupMemberFragment.isHardwareAccelerated());
-//                    groupMemberFragment.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                Log.d("AnimationExp", "in onAnimationEnd, name: " + animation.toString());
-                // mListener.changeMenuItemsForHomeFragmentToGroupMembersFragment();
-                animationForPullerBottomListener.animatePullerBottom();
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                Log.d("AnimationExp", "in HomeFragment onAnimationRepeat(): ");
-
-            }
-        });
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.play(slideDownAnimation).with(animationForUpperView);
-        animatorSet.start();
-    }
-
-    public static interface AnimationForPullerBottomListener {
-        public void animatePullerBottom();
-    }
 
 
 }
