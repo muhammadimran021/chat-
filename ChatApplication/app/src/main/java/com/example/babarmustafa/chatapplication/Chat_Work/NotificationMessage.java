@@ -10,6 +10,7 @@ public class NotificationMessage {
     private String UUID;
     private String Time;
 
+
     public NotificationMessage(String message) {
         this.message = message;
     }

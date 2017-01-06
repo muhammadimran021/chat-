@@ -46,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -103,6 +104,7 @@ public class Chat_Main_View extends AppCompatActivity implements NavigationView.
                 if (user != null) {
 
                     // User is signed in
+
 
                     Log.d("TAG", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
@@ -207,14 +209,14 @@ public class Chat_Main_View extends AppCompatActivity implements NavigationView.
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
