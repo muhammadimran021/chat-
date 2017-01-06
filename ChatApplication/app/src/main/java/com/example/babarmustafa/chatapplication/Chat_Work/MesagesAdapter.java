@@ -154,11 +154,17 @@ public class MesagesAdapter extends BaseAdapter {
                         .load(R.drawable.psd)
                         .into(for_s);
             }
-            else {
+            if(finale_extention_of_file.equals(".jpg") ) {
                 Glide.with(context)
-                        .load(R.drawable.for_aall)
+                        .load(mssgs)
                         .into(for_s);
             }
+
+//            else {
+//                Glide.with(context)
+//                        .load(R.drawable.for_aall)
+//                        .into(for_s);
+//            }
             // d.equals(muy);
 
 

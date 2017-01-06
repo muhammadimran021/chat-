@@ -101,6 +101,12 @@
             android:id="@+id/for_files"
             android:src="@drawable/unnamed"
             android:background="#000000"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_images"
+            android:src="@drawable/icon_image_picker"
+            android:background="#000000"/>
 
     </LinearLayout>
 

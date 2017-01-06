@@ -76,8 +76,13 @@ public class ConversationActivity extends Activity {
     private FirebaseUser user;
     private StorageReference mStoarge;
     private Uri mImageUri = null;
+    private Uri ImageUri = null;
+
    Uri downloadUrl;
+    Uri downloadl;
+
     ImageButton for_file_sharing;
+    ImageButton for_image_sharing;
 
 
 
@@ -96,6 +101,7 @@ public class ConversationActivity extends Activity {
         for_user_image_on_toolbar = (CircularImageView) findViewById(R.id.user_pic);
         for_user_name_selected_for_chat = (TextView) findViewById(R.id.selected);
         for_file_sharing = (ImageButton) findViewById(R.id.for_files);
+        for_image_sharing = (ImageButton) findViewById(R.id.for_images);
 
 
         mStoarge = FirebaseStorage.getInstance().getReference();
@@ -136,6 +142,14 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
         startActivityForResult(intent, SAVE_REQUEST_CODE);
     }
 });
+        for_image_sharing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent_of_gallery = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent_of_gallery, Gallery_Request);
+            }
+        });
 
     }
 
@@ -245,7 +259,7 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         // TODO Auto-generated method stub
         switch(requestCode){
             case SAVE_REQUEST_CODE:
@@ -281,6 +295,45 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
                         Toast.makeText(ConversationActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
                     }
                 });
+                }
+
+                if (requestCode == Gallery_Request && resultCode == RESULT_OK) {
+                    Uri ImageUri = data.getData();
+                    CropImage.activity(ImageUri)
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .start(this);
+                    StorageReference filath = mStoarge.child("Imes").child(ImageUri.getLastPathSegment());
+                    filath.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            downloadl = taskSnapshot.getDownloadUrl();
+                            Toast.makeText(ConversationActivity.this, ""+downloadl, Toast.LENGTH_SHORT).show();
+
+
+//
+                            //  DatabaseReference database_reference = databaseReference.push();
+//
+//                        database_reference.child("images").setValue(downloadUrl.toString());
+                            Toast.makeText(ConversationActivity.this, "Upload image succesfully", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                }
+                if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (resultCode == RESULT_OK) {
+
+                        ImageUri = result.getUri();
+//                       for_s.setImageURI(mImageUri);
+
+                    }
+                    else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        Exception error = result.getError();
+                    }
+
+
                 }
                 break;
 
