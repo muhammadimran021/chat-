@@ -112,7 +112,7 @@ public class MesagesAdapter extends BaseAdapter {
 //            for_messages.setVisibility(View.INVISIBLE);
            String fileExtenstion = MimeTypeMap.getFileExtensionFromUrl(mssgs);
             String finale_extention_of_file = "." +fileExtenstion;
-
+            Toast.makeText(context, ""+finale_extention_of_file, Toast.LENGTH_SHORT).show();
            for_s.setVisibility(View.VISIBLE);
            // Picasso.with(context).load(mssgs).into(for_s);
             if(finale_extention_of_file.equals(".pdf")) {
@@ -155,9 +155,26 @@ public class MesagesAdapter extends BaseAdapter {
                         .load(R.drawable.psd)
                         .into(for_s);
             }
-            else if(finale_extention_of_file.equals(".jpg") ) {
+            else if(finale_extention_of_file.equals(".apk") ) {
+                Glide.with(context)
+                        .load(R.drawable.ap)
+                        .into(for_s);
+            }
+            
+
+            else if(finale_extention_of_file.equalsIgnoreCase(".jpg") ||finale_extention_of_file.equalsIgnoreCase(".png")
+                    ||finale_extention_of_file.equalsIgnoreCase(".gif") ||
+                    finale_extention_of_file.equalsIgnoreCase(".jpeg")) {
                 Glide.with(context)
                         .load(mssgs)
+                        .into(for_s);
+            }
+            else if(finale_extention_of_file.equalsIgnoreCase(".mp3") ||finale_extention_of_file.equalsIgnoreCase(".3ga")
+                    ||finale_extention_of_file.equalsIgnoreCase(".amr") || finale_extention_of_file.equalsIgnoreCase(".amr") ||
+                    finale_extention_of_file.equalsIgnoreCase(".m4a") || finale_extention_of_file.equalsIgnoreCase(".wav") ||
+                    finale_extention_of_file.equalsIgnoreCase(".wma") )  {
+                Glide.with(context)
+                        .load(R.drawable.au)
                         .into(for_s);
             }
         else{

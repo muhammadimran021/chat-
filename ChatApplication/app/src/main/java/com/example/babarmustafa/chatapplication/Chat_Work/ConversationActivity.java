@@ -84,6 +84,7 @@ public class ConversationActivity extends Activity {
 
     ImageButton for_file_sharing;
     ImageButton for_image_sharing;
+    ImageButton for_audio_sharing;
     boolean tocheck = false;
 
 
@@ -101,6 +102,7 @@ public class ConversationActivity extends Activity {
         for_user_name_selected_for_chat = (TextView) findViewById(R.id.selected);
         for_file_sharing = (ImageButton) findViewById(R.id.for_files);
         for_image_sharing = (ImageButton) findViewById(R.id.for_images);
+        for_audio_sharing = (ImageButton) findViewById(R.id.for_sound);
 
 
         mStoarge = FirebaseStorage.getInstance().getReference();
@@ -127,6 +129,7 @@ public class ConversationActivity extends Activity {
         get_f_gender = getIntent().getStringExtra("friend_gender");
 
 
+
         Picasso.with(ConversationActivity.this).load(get_f_pic).into(for_user_image_on_toolbar);
         for_user_name_selected_for_chat.setText(get_f_name);
         checkConversationNewOROLD();
@@ -149,6 +152,16 @@ public class ConversationActivity extends Activity {
                 intent_of_gallery = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent_of_gallery, Gallery_Request);
+            }
+        });
+        for_audio_sharing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tocheck = true;
+                Intent intent_upload = new Intent();
+                intent_upload.setType("audio/*");
+                intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent_upload,SAVE_REQUEST_CODE);
             }
         });
 

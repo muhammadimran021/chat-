@@ -36,7 +36,8 @@
             android:layout_width="75dp"
             android:layout_height="60dp"
             android:src="@drawable/ima"
-            android:id="@+id/user_pic" />
+            android:id="@+id/user_pic"
+            app:civ_border_width="0dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,9 +86,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-
+            android:background="@drawable/se"
             android:gravity="center"
-            android:text="send"
+
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     <LinearLayout
@@ -106,6 +107,12 @@
             android:layout_height="50dp"
             android:id="@+id/for_images"
             android:src="@drawable/icon_image_picker"
+            android:background="#000000"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_sound"
+            android:src="@drawable/mus"
             android:background="#000000"/>
 
     </LinearLayout>
