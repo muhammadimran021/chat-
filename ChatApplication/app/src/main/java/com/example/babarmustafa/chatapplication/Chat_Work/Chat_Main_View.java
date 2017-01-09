@@ -97,26 +97,7 @@ public class Chat_Main_View extends AppCompatActivity implements NavigationView.
         final String login_user = mAuth.getCurrentUser().getUid();
 
         //forlogout
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
 
-                    // User is signed in
-
-
-                    Log.d("TAG", "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Intent call = new Intent(Chat_Main_View.this, MainActivity.class);
-                    call.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(call);
-                    Log.d("TAG", "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
         FirebaseDatabase.getInstance().getReference().child("User Info").child(login_user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -311,7 +292,7 @@ iv.setOnClickListener(new View.OnClickListener() {
     protected void onStart() {
         super.onStart();
 //        Picasso.with(Chat_Main_View.this).load(String.valueOf(user_profile_image)).into(iv);
-        mAuth.addAuthStateListener(mAuthListener);
+//        mAuth.addAuthStateListener(mAuthListener);
     }
 
 
