@@ -83,6 +83,7 @@ public class ConversationActivity extends Activity {
 
     ImageButton for_file_sharing;
     ImageButton for_image_sharing;
+    boolean tocheck = false;
 
 
 
@@ -137,6 +138,7 @@ public class ConversationActivity extends Activity {
 for_file_sharing.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
+        tocheck = true;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("application/*");
         startActivityForResult(intent, SAVE_REQUEST_CODE);
@@ -145,6 +147,9 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
         for_image_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                tocheck = false;
+
                 intent_of_gallery = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent_of_gallery, Gallery_Request);
@@ -261,13 +266,9 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
 
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         // TODO Auto-generated method stub
-        switch(requestCode){
-            case SAVE_REQUEST_CODE:
-                if(resultCode != RESULT_OK ){
-                    Toast.makeText(this, "no file selected", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else
+
+
+                if(requestCode == SAVE_REQUEST_CODE && resultCode == RESULT_OK && tocheck == true)
             {
                     String FilePath = data.getData().getPath();
 
@@ -297,37 +298,36 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
                 });
                 }
 
-                if (requestCode == Gallery_Request && resultCode == RESULT_OK) {
+
+                if (requestCode == Gallery_Request && resultCode == RESULT_OK && tocheck == false) {
                     Uri ImageUri = data.getData();
                     CropImage.activity(ImageUri)
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .start(this);
-                    StorageReference filath = mStoarge.child("Imes").child(ImageUri.getLastPathSegment());
-                    filath.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            downloadl = taskSnapshot.getDownloadUrl();
-                            Toast.makeText(ConversationActivity.this, ""+downloadl, Toast.LENGTH_SHORT).show();
-
-
-//
-                            //  DatabaseReference database_reference = databaseReference.push();
-//
-//                        database_reference.child("images").setValue(downloadUrl.toString());
-                            Toast.makeText(ConversationActivity.this, "Upload image succesfully", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
 
                 }
-                if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (resultCode == RESULT_OK) {
 
                         ImageUri = result.getUri();
 //                       for_s.setImageURI(mImageUri);
+                        StorageReference filath = mStoarge.child("Im").child(ImageUri.getLastPathSegment());
+                        filath.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                                downloadl = taskSnapshot.getDownloadUrl();
+                                Toast.makeText(ConversationActivity.this, ""+downloadl, Toast.LENGTH_SHORT).show();
+
+
+
+                                Toast.makeText(ConversationActivity.this, "Upload image succesfully", Toast.LENGTH_SHORT).show();
+                                for_message.setText(downloadl.toString());
+
+                            }
+                        });
                     }
                     else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                         Exception error = result.getError();
@@ -335,12 +335,12 @@ for_file_sharing.setOnClickListener(new View.OnClickListener() {
 
 
                 }
-                break;
 
-        }
+
+               }
     }
 
 
 
 
-}
+

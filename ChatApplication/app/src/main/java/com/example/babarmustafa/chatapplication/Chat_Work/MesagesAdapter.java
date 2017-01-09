@@ -112,7 +112,7 @@ public class MesagesAdapter extends BaseAdapter {
 //            for_messages.setVisibility(View.INVISIBLE);
            String fileExtenstion = MimeTypeMap.getFileExtensionFromUrl(mssgs);
             String finale_extention_of_file = "." +fileExtenstion;
-            Toast.makeText(context, "extention"+finale_extention_of_file, Toast.LENGTH_SHORT).show();
+
            for_s.setVisibility(View.VISIBLE);
            // Picasso.with(context).load(mssgs).into(for_s);
             if(finale_extention_of_file.equals(".pdf")) {
@@ -120,43 +120,49 @@ public class MesagesAdapter extends BaseAdapter {
                         .load(R.drawable.pdf_for)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".doc") || finale_extention_of_file.equals(".docx") ) {
+            else if(finale_extention_of_file.equals(".doc") || finale_extention_of_file.equals(".docx") ) {
                 Glide.with(context)
                         .load(R.drawable.word_for)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".ppt") || finale_extention_of_file.equals(".pptx") ) {
+            else if(finale_extention_of_file.equals(".ppt") || finale_extention_of_file.equals(".pptx") ) {
                 Glide.with(context)
                         .load(R.drawable.ppt_for)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".xls") || finale_extention_of_file.equals(".xlsx") ) {
+            else if(finale_extention_of_file.equals(".xls") || finale_extention_of_file.equals(".xlsx") ) {
                 Glide.with(context)
                         .load(R.drawable.excel_for)
                         .into(for_s);
-            } if(finale_extention_of_file.equals(".rar") ) {
+            }
+            else if(finale_extention_of_file.equals(".rar") ) {
                 Glide.with(context)
                         .load(R.drawable.rar)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".zip") ) {
+            else if(finale_extention_of_file.equals(".zip") ) {
                 Glide.with(context)
                         .load(R.drawable.fpr_zip)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".txt") ) {
+            else if(finale_extention_of_file.equals(".txt") ) {
                 Glide.with(context)
                         .load(R.drawable.re_text)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".psd") ) {
+            else if(finale_extention_of_file.equals(".psd") ) {
                 Glide.with(context)
                         .load(R.drawable.psd)
                         .into(for_s);
             }
-            if(finale_extention_of_file.equals(".jpg") ) {
+            else if(finale_extention_of_file.equals(".jpg") ) {
                 Glide.with(context)
                         .load(mssgs)
+                        .into(for_s);
+            }
+        else{
+                Glide.with(context)
+                        .load(R.drawable.for_aall)
                         .into(for_s);
             }
 
