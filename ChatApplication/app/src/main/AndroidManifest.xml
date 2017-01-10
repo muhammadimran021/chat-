@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.babarmustafa.chatapplication">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -47,9 +48,11 @@ background. To receive notifications in foregrounded apps, to receive data paylo
             android:name=".Chat_Work.Chat_Main_View"
             android:label="@string/title_activity_chat__main__view"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Chat_Work.ConversationActivity"></activity>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity android:name=".Chat_Work.ConversationActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".User_Profile.UserProfile"></activity>
     </application>
 
 </manifest>

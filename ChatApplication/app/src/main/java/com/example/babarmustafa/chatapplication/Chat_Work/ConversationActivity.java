@@ -2,7 +2,9 @@ package com.example.babarmustafa.chatapplication.Chat_Work;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -11,13 +13,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.example.babarmustafa.chatapplication.R;
 import com.example.babarmustafa.chatapplication.User;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.example.babarmustafa.chatapplication.User_Profile.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +35,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -87,7 +89,6 @@ public class ConversationActivity extends Activity {
     ImageButton for_audio_sharing;
     boolean tocheck = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,9 @@ public class ConversationActivity extends Activity {
 
 
         mStoarge = FirebaseStorage.getInstance().getReference();
+
+
+        //addGroupMembersFragment(R.id.member_fragment_container);
 
 
         database = FirebaseDatabase.getInstance().getReference();
@@ -129,10 +133,11 @@ public class ConversationActivity extends Activity {
         get_f_gender = getIntent().getStringExtra("friend_gender");
 
 
-
+    ClickOnName();
         Picasso.with(ConversationActivity.this).load(get_f_pic).into(for_user_image_on_toolbar);
         for_user_name_selected_for_chat.setText(get_f_name);
         checkConversationNewOROLD();
+
 
 
         for_file_sharing.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +159,7 @@ public class ConversationActivity extends Activity {
                 startActivityForResult(intent_of_gallery, Gallery_Request);
             }
         });
+      
         for_audio_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +168,8 @@ public class ConversationActivity extends Activity {
                 intent_upload.setType("audio/*");
                 intent_upload.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent_upload,SAVE_REQUEST_CODE);
+    
+      
             }
         });
 
@@ -273,7 +281,6 @@ public class ConversationActivity extends Activity {
             }
         });
     }
-
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         // TODO Auto-generated method stub
         if (requestCode == SAVE_REQUEST_CODE && resultCode == RESULT_OK && tocheck == true) {
@@ -346,5 +353,25 @@ public class ConversationActivity extends Activity {
 
 
 
+
+
+
+    public void ClickOnName() {
+        for_user_name_selected_for_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplication(), UserProfile.class);
+                i.putExtra("username", get_f_name);
+                i.putExtra("userimage", get_f_pic);
+                i.putExtra("useremail", get_f_email);
+                i.putExtra("usergender", get_f_gender);
+                startActivity(i);
+            }
+        });
+    }
+
+
+
+}
 
 
