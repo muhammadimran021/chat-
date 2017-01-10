@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.babarmustafa.chatapplication.R;
 import com.example.babarmustafa.chatapplication.User;
@@ -347,7 +348,7 @@ public class ConversationActivity extends Activity {
 
 
     }
-}
+
 
 
 
