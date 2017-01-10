@@ -23,6 +23,17 @@
         android:background="?attr/colorPrimary"
         android:minHeight="@dimen/abc_action_bar_default_height_material">
 
+
+        <!--<ImageButton-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:background="?attr/colorPrimary"-->
+            <!--android:src="@drawable/back"-->
+            <!--android:id="@+id/throw_back"-->
+
+            <!--/>-->
+        <com.mikhaellopez.circularimageview.CircularImageView
+
         <ImageButton
             android:id="@+id/throw_back"
             android:layout_width="40dp"
@@ -32,11 +43,18 @@
 
             />
 
+
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/user_pic"
             android:layout_width="75dp"
             android:layout_height="60dp"
+
+            
+            android:id="@+id/user_pic"
+            app:civ_border_width="0dp"/>
+
             android:src="@drawable/ima" />
+
 
         <TextView
             android:id="@+id/selected"
@@ -46,6 +64,7 @@
             android:textColor="#FFFFFF"
             android:textSize="25dp"
             android:textStyle="bold" />
+
 
     </android.support.v7.widget.Toolbar>
 
@@ -58,6 +77,7 @@
         >
 
     </ListView>
+
 
 
     <LinearLayout
@@ -84,26 +104,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-
+            android:background="@drawable/se"
             android:gravity="center"
-            android:text="send"
+
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <!--<FrameLayout-->
-            <!--android:id="@+id/frame_layout"-->
-            <!--android:layout_width="match_parent"-->
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_files"
+            android:src="@drawable/unnamed"
+            android:background="#000000"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_images"
+            android:src="@drawable/icon_image_picker"
+            android:background="#000000"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_sound"
+            android:src="@drawable/mus"
+            android:background="#000000"/>
 
-            <!--android:layout_height="match_parent">-->
+    </LinearLayout>
 
 
-        <!--</FrameLayout>-->
-
-    <!--</LinearLayout>-->
 
 </LinearLayout>
 

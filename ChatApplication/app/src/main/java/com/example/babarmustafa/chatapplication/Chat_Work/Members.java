@@ -81,8 +81,9 @@ public class Members extends Fragment {
         list = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
-        final String login_user = mAuth.getCurrentUser().getUid();
-
+if(mAuth.getCurrentUser().getUid() != null) {
+    final String login_user = mAuth.getCurrentUser().getUid();
+}
         database = FirebaseDatabase.getInstance().getReference();
 
 

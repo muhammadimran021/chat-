@@ -2,7 +2,11 @@ package com.example.babarmustafa.chatapplication.Chat_Work;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import android.net.Uri;
+
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +16,10 @@ import android.widget.TextView;
 
 import com.example.babarmustafa.chatapplication.R;
 import com.example.babarmustafa.chatapplication.User;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.example.babarmustafa.chatapplication.User_Profile.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,9 +28,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
-
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,7 +44,9 @@ public class ConversationActivity extends Activity {
     EditText for_message;
     ListView conversation;
     Button to_send;
-    ImageButton back_to_main;
+
+    CircularImageView for_user_image_on_toolbar;
+    TextView for_user_name_selected_for_chat;
 
 
     DatabaseReference database;
@@ -48,20 +62,32 @@ public class ConversationActivity extends Activity {
     String get_f_name;
     String get_f_email;
     String get_f_gender;
-    CircularImageView for_user_image_on_toolbar;
-    TextView for_user_name_selected_for_chat;
+    Intent intent_of_gallery;
+    private static int Gallery_Request = 1;
+
     private String conversationPushRef;
     private Conver conversationData;
     private boolean isConversationOld = false;
+    private static final int SAVE_REQUEST_CODE = 1;
 
     public HashMap<String, String> hashObj = new HashMap<>();
     public HashMap<String, String> hashObj2 = new HashMap<>();
     NotificationMessage notificationMessage;
 
-    RightAdapter listadapter;
+    MesagesAdapter listadapter;
     private ArrayList<NotificationMessage> messages;
     private FirebaseUser user;
+    private StorageReference mStoarge;
+    private Uri mImageUri = null;
+    private Uri ImageUri = null;
 
+    Uri downloadUrl;
+    Uri downloadl;
+
+    ImageButton for_file_sharing;
+    ImageButton for_image_sharing;
+    ImageButton for_audio_sharing;
+    boolean tocheck = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +97,16 @@ public class ConversationActivity extends Activity {
 
         for_message = (EditText) findViewById(R.id.editMessage);
         to_send = (Button) findViewById(R.id.button_Send);
-        back_to_main = (ImageButton) findViewById(R.id.throw_back);
+        // back_to_main = (ImageButton) findViewById(R.id.throw_back);
         conversation = (ListView) findViewById(R.id.messages_conversation);
         for_user_image_on_toolbar = (CircularImageView) findViewById(R.id.user_pic);
         for_user_name_selected_for_chat = (TextView) findViewById(R.id.selected);
+        for_file_sharing = (ImageButton) findViewById(R.id.for_files);
+        for_image_sharing = (ImageButton) findViewById(R.id.for_images);
+        for_audio_sharing = (ImageButton) findViewById(R.id.for_sound);
+
+
+        mStoarge = FirebaseStorage.getInstance().getReference();
 
 
         //addGroupMembersFragment(R.id.member_fragment_container);
@@ -85,8 +117,11 @@ public class ConversationActivity extends Activity {
 
         list = new ArrayList<>();
         messages = new ArrayList<>();
-        listadapter = new RightAdapter(messages, ConversationActivity.this);
+        listadapter = new MesagesAdapter(messages, ConversationActivity.this);
         conversation.setAdapter(listadapter);
+        //for hiding gridlines
+        conversation.setDivider(null);
+        conversation.setDividerHeight(0);
         user = mAuth.getInstance().getCurrentUser();
         UUID = mAuth.getCurrentUser().getUid();
 
@@ -98,18 +133,43 @@ public class ConversationActivity extends Activity {
         get_f_gender = getIntent().getStringExtra("friend_gender");
 
 
+    ClickOnName();
         Picasso.with(ConversationActivity.this).load(get_f_pic).into(for_user_image_on_toolbar);
         for_user_name_selected_for_chat.setText(get_f_name);
         checkConversationNewOROLD();
-        ClickOnName();
-        back_to_main.setOnClickListener(new View.OnClickListener() {
+
+
+
+        for_file_sharing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tocheck = true;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("application/*");
+                startActivityForResult(intent, SAVE_REQUEST_CODE);
+            }
+        });
+        for_image_sharing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tocheck = false;
 
-//        getSupportFragmentManager()
-//                .beginTransaction().add(R.id.frame_layout,new Two()).commit();
-//        Intent u = new Intent(ConversationActivity.this,Chat_Main_View.class);
-//        startActivity(u);
+                intent_of_gallery = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent_of_gallery, Gallery_Request);
+            }
+        });
+      
+        for_audio_sharing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tocheck = true;
+                Intent intent_upload = new Intent();
+                intent_upload.setType("audio/*");
+                intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent_upload,SAVE_REQUEST_CODE);
+    
+      
             }
         });
 
@@ -164,7 +224,7 @@ public class ConversationActivity extends Activity {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
-                    tempRefObj.setUserid(get_f_id_on_clicked);
+                    tempRefObj.setUserid(mAuth.getCurrentUser().getUid());
                     database.child("user_conv").child(get_f_id_on_clicked).push().setValue(tempRefObj, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -201,16 +261,17 @@ public class ConversationActivity extends Activity {
         setButtonClick();
     }
 
+
     private void setButtonClick() {
         to_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String eee = for_message.getText().toString();
                 String mydate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
                 if (for_message.getText().length() > 1) {
                     NotificationMessage m = new NotificationMessage();
-                    m.setMessage(for_message.getText().toString());
+                    m.setMessage(eee);
                     m.setTime(mydate);
                     m.setUUID(user.getUid());
                     database.child("conversation").child(conversationPushRef).push().setValue(m);
@@ -220,6 +281,80 @@ public class ConversationActivity extends Activity {
             }
         });
     }
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        // TODO Auto-generated method stub
+        if (requestCode == SAVE_REQUEST_CODE && resultCode == RESULT_OK && tocheck == true) {
+            String FilePath = data.getData().getPath();
+
+
+                mImageUri = data.getData();
+                StorageReference filepath = mStoarge.child("files").child(mImageUri.getLastPathSegment());
+                filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                        downloadUrl = taskSnapshot.getDownloadUrl();
+
+                        Toast.makeText(ConversationActivity.this, "Upload File succesfully", Toast.LENGTH_SHORT).show();
+                        for_message.setText(downloadUrl.toString());
+
+
+                    }
+
+                });
+
+                filepath.putFile(mImageUri).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ConversationActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        }
+            if (requestCode == Gallery_Request && resultCode == RESULT_OK && tocheck == false) {
+                Uri ImageUri = data.getData();
+                CropImage.activity(ImageUri)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(this);
+
+
+            } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+
+                    ImageUri = result.getUri();
+//                       for_s.setImageURI(mImageUri);
+                    StorageReference filath = mStoarge.child("Im").child(ImageUri.getLastPathSegment());
+                    filath.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            downloadl = taskSnapshot.getDownloadUrl();
+                            Toast.makeText(ConversationActivity.this, "" + downloadl, Toast.LENGTH_SHORT).show();
+
+
+                            Toast.makeText(ConversationActivity.this, "Upload image succesfully", Toast.LENGTH_SHORT).show();
+                            for_message.setText(downloadl.toString());
+
+                        }
+                    });
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
+
+            }
+
+
+    }
+}
+
+
+
+
+
+
+
 
     public void ClickOnName() {
         for_user_name_selected_for_chat.setOnClickListener(new View.OnClickListener() {

@@ -9,7 +9,7 @@
             android:id="@+id/profile_view"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:civ_shadow="true"
+            app:civ_border_width="0dp"
             />
 
 

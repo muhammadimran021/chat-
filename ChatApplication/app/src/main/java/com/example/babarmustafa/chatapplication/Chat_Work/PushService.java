@@ -30,48 +30,51 @@ public class PushService extends Service {
 
     @Override
     public void onCreate() {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+if(FirebaseAuth.getInstance().getCurrentUser().getUid() != null){
 
-        FirebaseDatabase.getInstance().getReference().child("Notifications").child(currentUser.getUid()).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+    currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseDatabase.getInstance().getReference().child("Notifications").child(currentUser.getUid()).addChildEventListener(new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-
-                Log.v("USER", "" + currentUser.getUid());
-
-                NotificationMessage data = dataSnapshot.getValue(NotificationMessage.class);
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
+            Log.v("USER", "" + currentUser.getUid());
 
-                //get messages from notification node
-                notif(data.getMessage());
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            NotificationMessage data = dataSnapshot.getValue(NotificationMessage.class);
 
 
-        });
+
+            //get messages from notification node
+            notif(data.getMessage());
+
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+
+
+    });
+}
         super.onCreate();
     }
     @Override
