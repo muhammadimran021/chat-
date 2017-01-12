@@ -1,40 +1,43 @@
 package com.example.babarmustafa.chatapplication.User_Profile.postView;
 
 
-
 /**
  * Created by muhammad imran on 05-Jan-17.
  */
 
 public class PostObj {
+    private String title;
+    private String Desc;
+    private String images;
 
-    private String Text;
-    private String Url;
-
-
-    public PostObj() {
+    public PostObj(String title, String desc, String images) {
+        this.title = title;
+        Desc = desc;
+        this.images = images;
     }
 
-    public PostObj(String text, String url) {
-        Text = text;
-        Url = url;
+    public String getTitle() {
+        return title;
     }
 
-    public String getText() {
-        return Text;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setText(String text) {
-        Text = text;
+    public String getDesc() {
+        return Desc;
     }
 
-    public String getUrl() {
-        return Url;
+    public void setDesc(String desc) {
+        this.Desc = desc;
     }
 
-    public void setUrl(String url) {
-        Url = url;
+    public String getImages() {
+        return images;
     }
 
+    public void setImages(String images) {
+        this.images = images;
+    }
 
 }

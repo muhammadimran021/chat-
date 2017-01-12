@@ -15,17 +15,24 @@ import com.squareup.picasso.Picasso;
 
 public class BlogViewHolder extends RecyclerView.ViewHolder {
     View view;
+
     public BlogViewHolder(View itemView) {
         super(itemView);
         view = itemView;
     }
-    public void setTitle(String title){
+
+    public void seTitle(String title) {
 
         TextView post_title = (TextView) view.findViewById(R.id.User_status);
         post_title.setText(title);
     }
 
-    public void setImage(Context context, String image){
+    public void setDescription(String description) {
+        TextView description_text = (TextView) view.findViewById(R.id.User_Name);
+        description_text.setText(description);
+    }
+
+    public void setImage(Context context, String image) {
 
         ImageView post_image = (ImageView) view.findViewById(R.id.User_post_image);
         Picasso.with(context).load(image).into(post_image);

@@ -48,7 +48,8 @@ background. To receive notifications in foregrounded apps, to receive data paylo
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".User_Profile.UserProfile"></activity>
+        <activity android:name=".User_Profile.UserProfile" />
+        <activity android:name=".User_Profile.postView.post"></activity>
     </application>
 
 </manifest>
