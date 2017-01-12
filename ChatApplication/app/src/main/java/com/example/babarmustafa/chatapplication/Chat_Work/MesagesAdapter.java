@@ -108,11 +108,10 @@ public class MesagesAdapter extends BaseAdapter {
         Pattern p = Pattern.compile(URL_REGEX);
         final Matcher muy = p.matcher(mssgs);//replace with string to compare
         if(muy.find()) {
-//https://firebasestorage.googleapis.com/v0/b/chatapplication-f99c2.appspot.com/o/files%2Fprimary%3A.profig.os?alt=media&token=d38a794e-6c19-4e1f-8aa9-aa2f6a3fa639
-//            for_messages.setVisibility(View.INVISIBLE);
+
            String fileExtenstion = MimeTypeMap.getFileExtensionFromUrl(mssgs);
             String finale_extention_of_file = "." +fileExtenstion;
-            Toast.makeText(context, ""+finale_extention_of_file, Toast.LENGTH_SHORT).show();
+
            for_s.setVisibility(View.VISIBLE);
            // Picasso.with(context).load(mssgs).into(for_s);
             if(finale_extention_of_file.equals(".pdf")) {

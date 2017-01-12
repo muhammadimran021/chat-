@@ -1,12 +1,18 @@
 package com.example.babarmustafa.chatapplication.Chat_Work;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.database.Cursor;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,14 +36,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ConversationActivity extends Activity {
@@ -79,12 +90,13 @@ public class ConversationActivity extends Activity {
     private ArrayList<NotificationMessage> messages;
     private FirebaseUser user;
     private StorageReference mStoarge;
+    StorageReference folderRef;
     private Uri mImageUri = null;
     private Uri ImageUri = null;
 
     Uri downloadUrl;
     Uri downloadl;
-
+    private long fileLenght;
     ImageButton for_file_sharing;
     ImageButton for_image_sharing;
     ImageButton for_audio_sharing;
@@ -109,6 +121,7 @@ public class ConversationActivity extends Activity {
 
         mStoarge = FirebaseStorage.getInstance().getReference();
 
+        folderRef = mStoarge.child("chat_files");
 
         //addGroupMembersFragment(R.id.member_fragment_container);
 
@@ -285,32 +298,36 @@ public class ConversationActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         // TODO Auto-generated method stub
         if (requestCode == SAVE_REQUEST_CODE && resultCode == RESULT_OK && tocheck == true) {
-            String FilePath = data.getData().getPath();
-
-
-                mImageUri = data.getData();
-                StorageReference filepath = mStoarge.child("files").child(mImageUri.getLastPathSegment());
-                filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-
-                        downloadUrl = taskSnapshot.getDownloadUrl();
-
-                        Toast.makeText(ConversationActivity.this, "Upload File succesfully", Toast.LENGTH_SHORT).show();
-                        for_message.setText(downloadUrl.toString());
-
-
+            final Uri uri = data.getData();
+            String filePath = null;
+            if (uri.getScheme().equals("content")) {
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                try {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        filePath = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                     }
-
-                });
-
-                filepath.putFile(mImageUri).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ConversationActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                } finally {
+                    cursor.close();
+                }
+            }
+            if (filePath == null) {
+                filePath = uri.getPath();
+                int cut = filePath.lastIndexOf('/');
+                if (cut != -1) {
+                    filePath = filePath.substring(cut + 1);
+                }
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
+            builder.setTitle("Want to Send File or not ?");
+            final String finalFilePath = filePath;
+            builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    uploadDocOrFile(finalFilePath, uri);
+                }
+            });
+          
+            builder.create().show();
 
         }
             if (requestCode == Gallery_Request && resultCode == RESULT_OK && tocheck == false) {
@@ -326,13 +343,13 @@ public class ConversationActivity extends Activity {
 
                     ImageUri = result.getUri();
 //                       for_s.setImageURI(mImageUri);
-                    StorageReference filath = mStoarge.child("Im").child(ImageUri.getLastPathSegment());
+                    StorageReference filath = mStoarge.child("chat_images").child(ImageUri.getLastPathSegment());
                     filath.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             downloadl = taskSnapshot.getDownloadUrl();
-                            Toast.makeText(ConversationActivity.this, "" + downloadl, Toast.LENGTH_SHORT).show();
+
 
 
                             Toast.makeText(ConversationActivity.this, "Upload image succesfully", Toast.LENGTH_SHORT).show();
@@ -371,6 +388,72 @@ public class ConversationActivity extends Activity {
         });
     }
 
+    private void uploadDocOrFile(String filePath, Uri uri) {
+
+        Date date = new Date(System.currentTimeMillis());
+        File fileRef = new File(filePath);
+        final String filenew = fileRef.getName();
+
+        int dot = filenew.lastIndexOf('.');
+        String base = (dot == -1) ? filenew : filenew.substring(0, dot);
+        final String extension = (dot == -1) ? "" : filenew.substring(dot + 1);
+        final ProgressDialog uploadPDialoge = new ProgressDialog(ConversationActivity.this);
+        uploadPDialoge.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        uploadPDialoge.setTitle("Uploading");
+        uploadPDialoge.setMessage("File Uploading Please wait !");
+        uploadPDialoge.setIndeterminate(false);
+        uploadPDialoge.setCancelable(false);
+        uploadPDialoge.setMax(100);
+        uploadPDialoge.show();
+        fileLenght = fileRef.length();
+        fileLenght = fileLenght / 1024;
+        System.out.println("File Path : " + fileRef.getPath() + ", File size : " + fileLenght + " KB");
+        Log.d("uridata", filePath);
+        Log.d("uridataLastSegment", uri.getLastPathSegment());
+        final long FIVE_MEGABYTE = 1024 * 1024 * 20;
+        fileLenght = fileLenght * 1024;
+        UploadTask uploadTask;
+
+        if (fileLenght <= FIVE_MEGABYTE) {
+            Uri file = Uri.fromFile(new File(filePath));
+
+            mStoarge = folderRef.child(uri +"."+ extension);
+            uploadTask = mStoarge.putFile(uri);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(ConversationActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    String downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                    Log.d("DownloadURL", downloadUrl.toString());
+
+                    for_message.setText(downloadUrl.toString());
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = 0;
+                    progress += (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    System.out.println("Upload is " + progress + "% done");
+                    uploadPDialoge.setProgress((int) progress);
+                    if (progress == 100) {
+                        uploadPDialoge.dismiss();
+                    }
+                }
+            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                    System.out.println("Upload is paused");
+                }
+            });
+        } else {
+            Toast.makeText(ConversationActivity.this, "File size is too large !", Toast.LENGTH_LONG).show();
+        }
+    }
 
 
 }
