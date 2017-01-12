@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -45,6 +47,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,6 +84,7 @@ public class ConversationActivity extends Activity {
     private Conver conversationData;
     private boolean isConversationOld = false;
     private static final int SAVE_REQUEST_CODE = 1;
+    private static final int REQUEST_IMAGE = 11;
 
     public HashMap<String, String> hashObj = new HashMap<>();
     public HashMap<String, String> hashObj2 = new HashMap<>();
@@ -100,6 +104,7 @@ public class ConversationActivity extends Activity {
     ImageButton for_file_sharing;
     ImageButton for_image_sharing;
     ImageButton for_audio_sharing;
+    ImageButton for_camera_pic;
     boolean tocheck = false;
 
     @Override
@@ -117,6 +122,7 @@ public class ConversationActivity extends Activity {
         for_file_sharing = (ImageButton) findViewById(R.id.for_files);
         for_image_sharing = (ImageButton) findViewById(R.id.for_images);
         for_audio_sharing = (ImageButton) findViewById(R.id.for_sound);
+        for_camera_pic = (ImageButton) findViewById(R.id.for_camera);
 
 
         mStoarge = FirebaseStorage.getInstance().getReference();
@@ -184,6 +190,15 @@ public class ConversationActivity extends Activity {
                 startActivityForResult(intent_upload,SAVE_REQUEST_CODE);
     
       
+            }
+        });
+        for_camera_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getBaseContext().getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, 111);
+                }
             }
         });
 
@@ -297,6 +312,40 @@ public class ConversationActivity extends Activity {
     }
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         // TODO Auto-generated method stub
+        if (requestCode == 111 && resultCode == Activity.RESULT_OK) {
+            //saves the pic locally
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] dataBAOS = baos.toByteArray();
+         //   http://stackoverflow.com/questions/38168014/how-to-upload-to-firebase-a-file-with-firebase-storage
+            /***************** UPLOADS THE PIC TO FIREBASE*****************/
+            // Points to the root reference
+
+            StorageReference imagesRef = mStoarge.child("tyruiop");
+
+            UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(ConversationActivity.this, "ailed to upload camera", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downrl = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(ConversationActivity.this, "upload camera", Toast.LENGTH_SHORT).show();
+                    for_message.setText(downrl.toString());
+                }
+            });
+        }
+
+
+
+
         if (requestCode == SAVE_REQUEST_CODE && resultCode == RESULT_OK && tocheck == true) {
             final Uri uri = data.getData();
             String filePath = null;
@@ -326,7 +375,7 @@ public class ConversationActivity extends Activity {
                     uploadDocOrFile(finalFilePath, uri);
                 }
             });
-          
+
             builder.create().show();
 
         }

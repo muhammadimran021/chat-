@@ -132,6 +132,12 @@
             android:src="@drawable/mus"
             android:background="#000000"/>
 
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/for_camera"
+
+            android:background="#000000"/>
     </LinearLayout>
 
 
