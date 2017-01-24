@@ -319,9 +319,6 @@ public class ConversationActivity extends Activity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] dataBAOS = baos.toByteArray();
-         //   http://stackoverflow.com/questions/38168014/how-to-upload-to-firebase-a-file-with-firebase-storage
-            /***************** UPLOADS THE PIC TO FIREBASE*****************/
-            // Points to the root reference
 
             StorageReference imagesRef = mStoarge.child("camera_images.jpg");
 
