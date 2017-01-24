@@ -323,7 +323,7 @@ public class ConversationActivity extends Activity {
             /***************** UPLOADS THE PIC TO FIREBASE*****************/
             // Points to the root reference
 
-            StorageReference imagesRef = mStoarge.child("tyruiop");
+            StorageReference imagesRef = mStoarge.child("camera_images.jpg");
 
             UploadTask uploadTask = imagesRef.putBytes(dataBAOS);
             uploadTask.addOnFailureListener(new OnFailureListener() {
